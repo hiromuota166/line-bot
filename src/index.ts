@@ -39,7 +39,10 @@ app.post("/webhook", function (req, res) {
       // 応答トークンを定義
       replyToken: events.replyToken,
       // 返信するメッセージを定義
-      messages: [userMessage],
+      messages: {
+        type: "text",
+        text: userMessage,
+      },
     });
 
     // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
