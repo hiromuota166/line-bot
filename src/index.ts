@@ -28,7 +28,7 @@ app.post("/webhook", function (req, res) {
   if (req.body.events[0].type === "message" && req.body.events[0].message.type === "text") {
     // APIサーバーに送信する応答トークンとメッセージデータを文字列化する
     // JSON.stringifyは、JavaScriptのオブジェクトをJSON文字列に変換するメソッド
-    
+
     const dataString = JSON.stringify({
       // 応答トークンを定義
       replyToken: req.body.events[0].replyToken,
@@ -36,8 +36,8 @@ app.post("/webhook", function (req, res) {
       messages: [
         {
           type: "image",
-          originalContentUrl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fprtimes.jp%2Fmagazine%2Ftoday%2Fphoto-day%2F&psig=AOvVaw1fxQ8yi2wYg3GBwKWuR8Da&ust=1722320393651000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwiXyKXLzcuHAxVHgVYBHXQCAbUQjRx6BAgAEBU",
-          previewImageUrl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fprtimes.jp%2Fmagazine%2Ftoday%2Fphoto-day%2F&psig=AOvVaw1fxQ8yi2wYg3GBwKWuR8Da&ust=1722320393651000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwiXyKXLzcuHAxVHgVYBHXQCAbUQjRx6BAgAEBU",
+          originalContentUrl: "./images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
+          previewImageUrl: "./images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
         },
       ],
     });
