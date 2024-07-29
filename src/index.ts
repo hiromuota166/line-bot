@@ -30,7 +30,7 @@ app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL!");
   // ユーザーがボットにメッセージを送った場合、応答メッセージを送る
   const events = req.body.events[0];
-  if (events.type === "message" && events.message.type === "text") {
+  if (events.type === "message" && (events.message.type === "text" || events.message.type === "sticker")) {
     // APIサーバーに送信する応答トークンとメッセージデータを文字列化する
     // JSON.stringifyは、JavaScriptのオブジェクトをJSON文字列に変換するメソッド
     const userMessage = events.message.text;
