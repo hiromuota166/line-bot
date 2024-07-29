@@ -36,8 +36,8 @@ app.post("/webhook", function (req, res) {
       messages: [
         {
           type: "image",
-          originalContentUrl: "./images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
-          previewImageUrl: "./images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
+          originalContentUrl: "../images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
+          previewImageUrl: "../images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
         },
       ],
     });
