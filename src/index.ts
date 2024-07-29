@@ -1,5 +1,9 @@
 import express from 'express';
 import https from 'https';
+import dotenv from 'dotenv';
+
+// .envファイルの読み込み
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
