@@ -25,9 +25,18 @@ app.get("/", (req, res) => {
 app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL!");
   // ユーザーがボットにメッセージを送った場合、応答メッセージを送る
-  if (req.body.events[0].type === "message") {
+  if (req.body.events[0].type === "message" && req.body.events[0].message.type === "text") {
     // APIサーバーに送信する応答トークンとメッセージデータを文字列化する
     // JSON.stringifyは、JavaScriptのオブジェクトをJSON文字列に変換するメソッド
+
+    const usermessage = req.body.events[0].message.text;
+
+    let response_message = "挨拶が欲しいです"
+
+    if (usermessage === "こんにちは") {
+      response_message = "はい！こんにちは！";
+    }
+
     const dataString = JSON.stringify({
       // 応答トークンを定義
       replyToken: req.body.events[0].replyToken,
@@ -35,11 +44,7 @@ app.post("/webhook", function (req, res) {
       messages: [
         {
           type: "text",
-          text: "Hello, user",
-        },
-        {
-          type: "text",
-          text: "May I help you?",
+          text: response_message,
         },
       ],
     });
