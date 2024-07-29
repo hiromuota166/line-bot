@@ -40,7 +40,7 @@ app.post("/webhook", function (req, res) {
     if (events.message.type === "sticker") {
       replyMessage = [
         {
-          type: "text",
+          type: "sticker",
           packageId: "1",
           stickerId: "1"
         },
