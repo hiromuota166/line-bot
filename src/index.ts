@@ -35,16 +35,26 @@ app.post("/webhook", function (req, res) {
     // JSON.stringifyは、JavaScriptのオブジェクトをJSON文字列に変換するメソッド
     const userMessage = events.message.text;
 
+    let replyMessage
+
+    if (events.messeage.type === "sticker") {
+      replyMessage = [{
+        type: "sticker",
+        packageId: "1",
+        stickerId: "1",
+      }];
+    } else if (events.message.type === "text") {
+      replyMessage = [{
+        type: "text",
+        text: userMessage,
+      }];
+    }
+
     const dataString = JSON.stringify({
       // 応答トークンを定義
       replyToken: events.replyToken,
       // 返信するメッセージを定義
-      messages: [
-        {
-          type: "text",
-          text: userMessage,
-        },
-      ],
+      messages: replyMessage,
     });
 
     // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
