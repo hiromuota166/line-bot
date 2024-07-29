@@ -13,10 +13,10 @@ const TOKEN = process.env.LINE_ACCESS_TOKEN;
 // Expressを通して画像ファイルをユーザーに提供できるようにする
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
- // jsonを受け取れるようにする
+// jsonを受け取れるようにする
 app.use(express.json());
 // urlエンコードを受け取れるようにする
-app.use( 
+app.use(
   express.urlencoded({
     extended: true,
   })
@@ -39,10 +39,12 @@ app.post("/webhook", function (req, res) {
       // 応答トークンを定義
       replyToken: events.replyToken,
       // 返信するメッセージを定義
-      messages: {
-        type: "text",
-        text: userMessage,
-      },
+      messages: [
+        {
+          type: "text",
+          text: userMessage,
+        },
+      ],
     });
 
     // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
