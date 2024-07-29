@@ -1,6 +1,7 @@
 import express from 'express';
 import https from 'https';
 import dotenv from 'dotenv';
+import path from 'path';
 
 // .envファイルの読み込み
 dotenv.config();
@@ -8,6 +9,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
+
+// Expressを通して画像ファイルをユーザーに提供できるようにする
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
  // jsonを受け取れるようにする
 app.use(express.json());
@@ -25,21 +29,37 @@ app.get("/", (req, res) => {
 app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL!");
   // ユーザーがボットにメッセージを送った場合、応答メッセージを送る
-  if (req.body.events[0].type === "message" && req.body.events[0].message.type === "text") {
+  const events = req.body.events[0];
+  if (events.type === "message" && events.message.type === "text") {
     // APIサーバーに送信する応答トークンとメッセージデータを文字列化する
     // JSON.stringifyは、JavaScriptのオブジェクトをJSON文字列に変換するメソッド
+    const userMessage = events.message.text;
+
+    let replyMessage;
+
+    if (userMessage === "こんにちは") {
+      replyMessage = {
+        type: "text",
+        text: "はい！こんにちは！",
+      };
+    } else if (userMessage === "画像") {
+      replyMessage = {
+        type: "image",
+        originalContentUrl: `${req.protocol}://${req.get('host')}/images/your-image.jpg`,
+        previewImageUrl: `${req.protocol}://${req.get('host')}/images/your-image.jpg`,
+      };
+    } else {
+      replyMessage = {
+        type: "text",
+        text: "すみません、よくわかりませんでした",
+      };
+    }
 
     const dataString = JSON.stringify({
       // 応答トークンを定義
-      replyToken: req.body.events[0].replyToken,
+      replyToken: events.replyToken,
       // 返信するメッセージを定義
-      messages: [
-        {
-          type: "image",
-          originalContentUrl: "../images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
-          previewImageUrl: "../images/LINE_ALBUM_春の対抗戦VS 同志社_240729_1.jpg",
-        },
-      ],
+      messages: [replyMessage],
     });
 
     // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
