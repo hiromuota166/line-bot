@@ -21,7 +21,8 @@ export const fetchGroups = async () => {
 export const fetchOrderStatus = async () => {
   const { data, error } = await supabase
     .from('orders')
-    .select('order_status')
+    .select('*')
+    .eq('order_status', '進行中');
 
   if (error) {
     throw new Error(error.message);
