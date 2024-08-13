@@ -1,6 +1,7 @@
 import https from 'https';
+import { fetchGroups } from '../services/supabaseService';  // Supabaseからのデータ取得関数をインポート
 
-export const handleLineMessage = (events: any) => {
+export const handleLineMessage = async (events: any) => {  // 関数を async に変更
   let replyMessage;
 
   if (events.message.type === "sticker") {
@@ -26,10 +27,20 @@ export const handleLineMessage = (events: any) => {
       }
     }
   } else if (events.message.type === "text") {
-    replyMessage = [{
-      type: "text",
-      text: events.message.text,
-    }];
+    try {
+      const groups = await fetchGroups();  // Supabaseからデータを取得
+      const groupNames = groups.map((group: any) => group.groupName).join(", ");  // グループ名を取得して結合
+
+      replyMessage = [{
+        type: "text",
+        text: `グループ一覧: ${groupNames}`,  // グループ名をテキストとして返信
+      }];
+    } catch (error) {
+      replyMessage = [{
+        type: "text",
+        text: "グループデータの取得に失敗しました。",
+      }];
+    }
   }
 
   const dataString = JSON.stringify({
