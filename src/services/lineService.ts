@@ -1,5 +1,5 @@
 import https from 'https';
-import { fetchGroups } from '../services/supabaseService';  // Supabaseからのデータ取得関数をインポート
+import { fetchGroups, fetchOrderStatus } from '../services/supabaseService';  // Supabaseからのデータ取得関数をインポート
 
 export const handleLineMessage = async (events: any) => {  // 関数を async に変更
   let replyMessage;
@@ -26,14 +26,14 @@ export const handleLineMessage = async (events: any) => {  // 関数を async �
         }
       }
     }
-  } else if (events.message.type === "text") {
+  } else if (events.message.text === "進行中の試合") {
     try {
-      const groups = await fetchGroups();  // Supabaseからデータを取得
-      const groupNames = groups.map((group: any) => group.groupName).join(", ");  // グループ名を取得して結合
+      const orders = await fetchOrderStatus();  // Supabaseからデータを取得
+      const orderStatus = orders.map((order: any) => order.order_status).join(", ");  // グループ名を取得して結合
 
       replyMessage = [{
         type: "text",
-        text: `グループ一覧: ${groupNames}`,  // グループ名をテキストとして返信
+        text: `進行状況一覧: ${orderStatus}`,  // グループ名をテキストとして返信
       }];
     } catch (error) {
       replyMessage = [{

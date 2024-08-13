@@ -17,3 +17,15 @@ export const fetchGroups = async () => {
 
   return data;
 };
+
+export const fetchOrderStatus = async () => {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('order_status')
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
