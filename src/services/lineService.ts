@@ -29,18 +29,38 @@ export const handleLineMessage = async (events: any) => {  // 関数を async �
   } else if (events.message.text === "進行中の試合") {
     try {
       const orders = await fetchOrderStatus();  // Supabaseからデータを取得
-      const orderStatus = orders.map((order: any) => order.order_status).join(", ");  // グループ名を取得して結合
-
-      replyMessage = [{
+    
+      // 対戦のリストを構築
+      const matches = orders.map((order: any) => {
+        if (order.is_doubles) {
+          // ダブルスの場合
+          const group1FirstName = order.group1_first?.name || "不明な選手";
+          const group1SecondName = order.group1_second?.name || "不明な選手";
+          const group2FirstName = order.group2_first?.name || "不明な選手";
+          const group2SecondName = order.group2_second?.name || "不明な選手";
+    
+          return `${group1FirstName} & ${group1SecondName} vs ${group2FirstName} & ${group2SecondName}`;
+        } else {
+          // シングルスの場合
+          const group1Name = order.group1_first?.name || "不明な選手";
+          const group2Name = order.group2_first?.name || "不明な選手";
+    
+          return `${group1Name} vs ${group2Name}`;
+        }
+      });
+    
+      // メッセージの内容を作成
+      const replyMessage = [{
         type: "text",
-        text: `進行状況一覧: ${orderStatus}`,  // グループ名をテキストとして返信
+        text: `進行中の対戦はこちら:\n${matches.join("\n")}`,  // 各対戦を改行で区切って表示
       }];
+    
     } catch (error) {
-      replyMessage = [{
+      const replyMessage = [{
         type: "text",
-        text: "グループデータの取得に失敗しました。",
+        text: "進行中の対戦情報の取得に失敗しました。",
       }];
-    }
+    }    
   }
 
   const dataString = JSON.stringify({
