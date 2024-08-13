@@ -49,18 +49,25 @@ export const handleLineMessage = async (events: any) => {  // 関数を async �
         }
       });
     
-      // メッセージの内容を作成
-      const replyMessage = [{
+      replyMessage = [{
         type: "text",
         text: `進行中の対戦はこちら:\n${matches.join("\n")}`,  // 各対戦を改行で区切って表示
       }];
     
     } catch (error) {
-      const replyMessage = [{
+      replyMessage = [{
         type: "text",
         text: "進行中の対戦情報の取得に失敗しました。",
       }];
     }    
+  }
+
+  // replyMessage が設定されていることを確認
+  if (!replyMessage) {
+    replyMessage = [{
+      type: "text",
+      text: "無効なメッセージです。",
+    }];
   }
 
   const dataString = JSON.stringify({
