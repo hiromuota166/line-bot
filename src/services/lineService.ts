@@ -10,10 +10,10 @@ export const handleLineMessage = async (events: any) => {
       replyMessage = [
         courtTemplate(
           "コート1",
-          ["西田英明", "山口想太"],  // チームAの選手名
-          ["竹内悠", "池田光徽"],   // チームBの選手名
-          ["乾勇翔", "渡邉泰成"],   // 待機Aの選手名
-          ["朝川凌", "並木宙良"]    // 待機Bの選手名
+          ["西田英明", "山口想太"],  
+          ["竹内悠", "池田光徽"],   
+          ["乾勇翔", "渡邉泰成"],   
+          ["朝川凌", "並木宙良"]    
         )
       ];
     } catch (error) {
@@ -24,7 +24,7 @@ export const handleLineMessage = async (events: any) => {
     }
   } else if (events.message.text === "進行中の試合") {
     try {
-      const orders = await fetchOrderStatus();  // Supabaseからデータを取得
+      const orders = await fetchOrderStatus();  
     
       const matches = orders.map((order: any) => {
         if (order.is_doubles) {
@@ -58,10 +58,10 @@ export const handleLineMessage = async (events: any) => {
       replyMessage = [
         courtTemplate(
           "コート1",
-          ["西田英明", "山口想太"],  // チームAの選手名
-          ["竹内悠", "池田光徽"],   // チームBの選手名
-          ["乾勇翔", "渡邉泰成"],   // 待機Aの選手名
-          ["朝川凌", "並木宙良"]    // 待機Bの選手名
+          ["西田英明", "山口想太"],  
+          ["竹内悠", "池田光徽"],   
+          ["乾勇翔", "渡邉泰成"],   
+          ["朝川凌", "並木宙良"]    
         )
       ];
     } catch (error) {

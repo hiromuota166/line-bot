@@ -68,7 +68,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": teamA[0] || "N/A",
+              "text": teamA[0],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -77,7 +77,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": teamA[1] || "N/A",
+              "text": teamA[1],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -101,7 +101,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": teamB[0] || "N/A",
+              "text": teamB[0],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -110,7 +110,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": teamB[1] || "N/A",
+              "text": teamB[1],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -144,7 +144,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": waitingA[0] || "N/A",
+              "text": waitingA[0],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -153,7 +153,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": waitingA[1] || "N/A",
+              "text": waitingA[1],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -177,7 +177,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": waitingB[0] || "N/A",
+              "text": waitingB[0],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
@@ -186,7 +186,7 @@ export const courtTemplate = (courtName: string, teamA: string[], teamB: string[
             },
             {
               "type": "text",
-              "text": waitingB[1] || "N/A",
+              "text": waitingB[1],
               "flex": 1,
               "size": "sm",
               "color": "#111111",
