@@ -7,15 +7,17 @@ export const handleLineMessage = async (events: any) => {
 
   if (events.message.type === "sticker") {
     try {
-      replyMessage = [
-        courtTemplate(
+      replyMessage = [{
+        type: "flex",
+        altText: "コート情報",
+        contents: courtTemplate(
           "コート1",
           ["西田英明", "山口想太"],  
           ["竹内悠", "池田光徽"],   
           ["乾勇翔", "渡邉泰成"],   
           ["朝川凌", "並木宙良"]    
         )
-      ];
+      }];      
       console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
     } catch (error) {
       replyMessage = [{
@@ -47,7 +49,7 @@ export const handleLineMessage = async (events: any) => {
         type: "text",
         text: `進行中の対戦はこちら:\n${matches.join("\n")}`,
       }];
-    
+      console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
     } catch (error) {
       replyMessage = [{
         type: "text",
@@ -56,15 +58,17 @@ export const handleLineMessage = async (events: any) => {
     }    
   } else if (events.message.text === "待機選手と待ちコート") {
     try {
-      replyMessage = [
-        courtTemplate(
+      replyMessage = [{
+        type: "flex",
+        altText: "コート情報",
+        contents: courtTemplate(
           "コート1",
           ["西田英明", "山口想太"],  
           ["竹内悠", "池田光徽"],   
           ["乾勇翔", "渡邉泰成"],   
           ["朝川凌", "並木宙良"]    
         )
-      ];
+      }];      
       console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
     } catch (error) {
       replyMessage = [{
