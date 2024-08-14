@@ -1,24 +1,36 @@
 import https from 'https';
 import { fetchGroups, fetchOrderStatus } from '../services/supabaseService';
-import { courtTemplate } from '../templates/lineTemplates';
+import { courtCarouselTemplate } from '../templates/lineTemplates';
 
 export const handleLineMessage = async (events: any) => {
   let replyMessage;
+
+  const courtsData = [
+    {
+      courtName: "コート1",
+      teamA: ["西田英明", "山口想太"],
+      teamB: ["竹内悠", "池田光徽"],
+      waitingA: ["乾勇翔", "渡邉泰成"],
+      waitingB: ["朝川凌", "並木宙良"]
+    },
+    {
+      courtName: "コート2",
+      teamA: ["浅田匠一郎", "安達隆太郎"],
+      teamB: ["伊藤新太", "岩瀬拓馬"],
+      waitingA: ["田中暖人", "林洸希"],
+      waitingB: ["広田侑平", "帆苅翔平"]
+    },
+  ];
+
+  const carouselMessage = courtCarouselTemplate(courtsData);
 
   if (events.message.type === "sticker") {
     try {
       replyMessage = [{
         type: "flex",
-        altText: "コート情報",
-        contents: courtTemplate(
-          "コート1",
-          ["西田英明", "山口想太"],  
-          ["竹内悠", "池田光徽"],   
-          ["乾勇翔", "渡邉泰成"],   
-          ["朝川凌", "並木宙良"]    
-        )
-      }];      
-      console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
+        altText: "コート情報一覧",
+        contents: carouselMessage
+      }];
     } catch (error) {
       replyMessage = [{
         type: "text",
@@ -49,7 +61,6 @@ export const handleLineMessage = async (events: any) => {
         type: "text",
         text: `進行中の対戦はこちら:\n${matches.join("\n")}`,
       }];
-      console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
     } catch (error) {
       replyMessage = [{
         type: "text",
@@ -60,16 +71,9 @@ export const handleLineMessage = async (events: any) => {
     try {
       replyMessage = [{
         type: "flex",
-        altText: "コート情報",
-        contents: courtTemplate(
-          "コート1",
-          ["西田英明", "山口想太"],  
-          ["竹内悠", "池田光徽"],   
-          ["乾勇翔", "渡邉泰成"],   
-          ["朝川凌", "並木宙良"]    
-        )
-      }];      
-      console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
+        altText: "コート情報一覧",
+        contents: carouselMessage
+      }];
     } catch (error) {
       replyMessage = [{
         type: "text",
