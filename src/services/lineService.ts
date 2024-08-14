@@ -16,6 +16,7 @@ export const handleLineMessage = async (events: any) => {
           ["朝川凌", "並木宙良"]    
         )
       ];
+      console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
     } catch (error) {
       replyMessage = [{
         type: "text",
@@ -64,6 +65,7 @@ export const handleLineMessage = async (events: any) => {
           ["朝川凌", "並木宙良"]    
         )
       ];
+      console.log('スタンプメッセージ:', JSON.stringify(replyMessage, null, 2));
     } catch (error) {
       replyMessage = [{
         type: "text",
