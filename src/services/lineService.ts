@@ -17,7 +17,10 @@ export const handleLineMessage = async (events: any) => {
         )
       ];
     } catch (error) {
-      console.error('スタンプ送るな')
+      replyMessage = [{
+        type: "text",
+        text: "進行中の対戦情報の取得に失敗しました。",
+      }];
     }
   } else if (events.message.text === "進行中の試合") {
     try {
@@ -62,7 +65,10 @@ export const handleLineMessage = async (events: any) => {
         )
       ];
     } catch (error) {
-      console.error('エラー発生:', error);
+      replyMessage = [{
+        type: "text",
+        text: "進行中の対戦情報の取得に失敗しました。",
+      }];
     }
   }
 
