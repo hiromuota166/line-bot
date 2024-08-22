@@ -20,6 +20,62 @@ export const handleLineMessage = async (events: any) => {
       waitingA: ["田中暖人", "林洸希"],
       waitingB: ["広田侑平", "帆苅翔平"]
     },
+    {
+      courtName: "コート1",
+      teamA: ["西田英明", "山口想太"],
+      teamB: ["竹内悠", "池田光徽"],
+      waitingA: ["乾勇翔", "渡邉泰成"],
+      waitingB: ["朝川凌", "並木宙良"]
+    },
+    {
+      courtName: "コート2",
+      teamA: ["浅田匠一郎", "安達隆太郎"],
+      teamB: ["伊藤新太", "岩瀬拓馬"],
+      waitingA: ["田中暖人", "林洸希"],
+      waitingB: ["広田侑平", "帆苅翔平"]
+    },
+    {
+      courtName: "コート1",
+      teamA: ["西田英明", "山口想太"],
+      teamB: ["竹内悠", "池田光徽"],
+      waitingA: ["乾勇翔", "渡邉泰成"],
+      waitingB: ["朝川凌", "並木宙良"]
+    },
+    {
+      courtName: "コート2",
+      teamA: ["浅田匠一郎", "安達隆太郎"],
+      teamB: ["伊藤新太", "岩瀬拓馬"],
+      waitingA: ["田中暖人", "林洸希"],
+      waitingB: ["広田侑平", "帆苅翔平"]
+    },
+    {
+      courtName: "コート1",
+      teamA: ["西田英明", "山口想太"],
+      teamB: ["竹内悠", "池田光徽"],
+      waitingA: ["乾勇翔", "渡邉泰成"],
+      waitingB: ["朝川凌", "並木宙良"]
+    },
+    {
+      courtName: "コート2",
+      teamA: ["浅田匠一郎", "安達隆太郎"],
+      teamB: ["伊藤新太", "岩瀬拓馬"],
+      waitingA: ["田中暖人", "林洸希"],
+      waitingB: ["広田侑平", "帆苅翔平"]
+    },
+    {
+      courtName: "コート1",
+      teamA: ["西田英明", "山口想太"],
+      teamB: ["竹内悠", "池田光徽"],
+      waitingA: ["乾勇翔", "渡邉泰成"],
+      waitingB: ["朝川凌", "並木宙良"]
+    },
+    {
+      courtName: "コート2",
+      teamA: ["浅田匠一郎", "安達隆太郎"],
+      teamB: ["伊藤新太", "岩瀬拓馬"],
+      waitingA: ["田中暖人", "林洸希"],
+      waitingB: ["広田侑平", "帆苅翔平"]
+    },
   ];
 
   const carouselMessage = courtCarouselTemplate(courtsData);
