@@ -225,40 +225,76 @@ export const allProgressCarouselTemplate = (
     body: {
       type: "box",
       layout: "vertical",
-      contents: progress.groupName.map((groupName, index) => ({
-        type: "box",
-        layout: "horizontal",
-        margin: "md",
-        contents: [
-          {
-            type: "box",
-            layout: "baseline",
-            contents: [
-              {
-                type: "text",
-                text: groupName || "N/A",
-                size: "sm",
-                color: "#555555",
-              },
-            ],
-            flex: 3,
-          },
-          {
-            type: "text",
-            text: progress.resultWin[index] || "0",
-            size: "sm",
-            color: "#ff4500",
-            align: "end",
-          },
-          {
-            type: "text",
-            text: progress.resultLose[index] || "0",
-            size: "sm",
-            color: "#111111",
-            align: "end",
-          },
-        ],
-      })),
+      contents: [
+        {
+          type: "box",
+          layout: "horizontal",
+          contents: [
+            {
+              type: "text",
+              text: "Team",
+              size: "sm",
+              color: "#555555",
+              weight: "bold",
+              flex: 3,
+            },
+            {
+              type: "text",
+              text: "WIN",
+              size: "sm",
+              color: "#ff4500",
+              align: "end",
+              weight: "bold",
+            },
+            {
+              type: "text",
+              text: "LOSE",
+              size: "sm",
+              color: "#111111",
+              align: "end",
+              weight: "bold",
+            },
+          ],
+        },
+        {
+          type: "separator",
+          margin: "md",
+        },
+        ...progress.groupName.map((groupName, index) => ({
+          type: "box",
+          layout: "horizontal",
+          margin: "md",
+          contents: [
+            {
+              type: "box",
+              layout: "baseline",
+              contents: [
+                {
+                  type: "text",
+                  text: groupName || "N/A",
+                  size: "sm",
+                  color: "#555555",
+                },
+              ],
+              flex: 3,
+            },
+            {
+              type: "text",
+              text: progress.resultWin[index] || "0",
+              size: "sm",
+              color: "#ff4500",
+              align: "end",
+            },
+            {
+              type: "text",
+              text: progress.resultLose[index] || "0",
+              size: "sm",
+              color: "#111111",
+              align: "end",
+            },
+          ],
+        })),
+      ],
     },
   }));
 
