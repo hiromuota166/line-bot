@@ -47,16 +47,22 @@ export type Database = {
       }
       groups: {
         Row: {
+          final_stage: boolean | null
           groupName: string
           id: string
+          qualifying: number | null
         }
         Insert: {
+          final_stage?: boolean | null
           groupName: string
           id?: string
+          qualifying?: number | null
         }
         Update: {
+          final_stage?: boolean | null
           groupName?: string
           id?: string
+          qualifying?: number | null
         }
         Relationships: []
       }

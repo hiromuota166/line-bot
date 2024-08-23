@@ -1,6 +1,10 @@
-import https from 'https';
-import { fetchCourtsWithPlayers, fetchGroups, fetchOrderStatus } from '../services/supabaseService';
-import { courtCarouselTemplate } from '../templates/lineTemplates';
+import https from "https";
+import {
+  fetchCourtsWithPlayers,
+  fetchGroups,
+  fetchOrderStatus,
+} from "../services/supabaseService";
+import { courtCarouselTemplate } from "../templates/lineTemplates";
 
 export const handleLineMessage = async (events: any) => {
   let replyMessage;
@@ -9,24 +13,24 @@ export const handleLineMessage = async (events: any) => {
   const fetchAndProcessCourtData = async () => {
     const courts = await fetchCourtsWithPlayers(); // fetchCourtsWithPlayersは事前に型付きで作成済み
 
-    return courts.map(court => ({
+    return courts.map((court) => ({
       courtName: `コート${court.court_number}`,
       teamA: [
-        court.now_order_id?.group1_first?.name || "不明な選手",
-        court.now_order_id?.group1_second?.name || "不明な選手"
+        court.now_order_id?.group1_first?.name || "待ちなし",
+        court.now_order_id?.group1_second?.name || "待ちなし",
       ],
       teamB: [
-        court.now_order_id?.group2_first?.name || "不明な選手",
-        court.now_order_id?.group2_second?.name || "不明な選手"
+        court.now_order_id?.group2_first?.name || "待ちなし",
+        court.now_order_id?.group2_second?.name || "待ちなし",
       ],
       waitingA: [
-        court.waiting_id?.group1_first?.name || "不明な選手",
-        court.waiting_id?.group1_second?.name || "不明な選手"
+        court.waiting_id?.group1_first?.name || "待ちなし",
+        court.waiting_id?.group1_second?.name || "待ちなし",
       ],
       waitingB: [
-        court.waiting_id?.group2_first?.name || "不明な選手",
-        court.waiting_id?.group2_second?.name || "不明な選手"
-      ]
+        court.waiting_id?.group2_first?.name || "待ちなし",
+        court.waiting_id?.group2_second?.name || "待ちなし",
+      ],
     }));
   };
 
@@ -35,16 +39,20 @@ export const handleLineMessage = async (events: any) => {
       const courtsData = await fetchAndProcessCourtData();
       const carouselMessage = courtCarouselTemplate(courtsData);
 
-      replyMessage = [{
-        type: "flex",
-        altText: "コート情報一覧",
-        contents: carouselMessage
-      }];
+      replyMessage = [
+        {
+          type: "flex",
+          altText: "コート情報一覧",
+          contents: carouselMessage,
+        },
+      ];
     } catch (error) {
-      replyMessage = [{
-        type: "text",
-        text: "進行中の対戦情報の取得に失敗しました。",
-      }];
+      replyMessage = [
+        {
+          type: "text",
+          text: "進行中の対戦情報の取得に失敗しました。",
+        },
+      ];
     }
   } else if (events.message.text === "進行中の試合") {
     try {
@@ -66,84 +74,92 @@ export const handleLineMessage = async (events: any) => {
         }
       });
 
-      replyMessage = [{
-        type: "text",
-        text: `進行中の対戦はこちら:\n${matches.join("\n")}`,
-      }];
+      replyMessage = [
+        {
+          type: "text",
+          text: `進行中の対戦はこちら:\n${matches.join("\n")}`,
+        },
+      ];
     } catch (error) {
-      replyMessage = [{
-        type: "text",
-        text: "進行中の対戦情報の取得に失敗しました。",
-      }];
-    }    
+      replyMessage = [
+        {
+          type: "text",
+          text: "進行中の対戦情報の取得に失敗しました。",
+        },
+      ];
+    }
   } else if (events.message.text === "待機選手と待ちコート") {
     try {
       const courtsData = await fetchAndProcessCourtData();
       const carouselMessage = courtCarouselTemplate(courtsData);
 
-      replyMessage = [{
-        type: "flex",
-        altText: "コート情報一覧",
-        contents: carouselMessage
-      }];
+      replyMessage = [
+        {
+          type: "flex",
+          altText: "コート情報一覧",
+          contents: carouselMessage,
+        },
+      ];
     } catch (error) {
-      replyMessage = [{
-        type: "text",
-        text: "進行中の対戦情報の取得に失敗しました。",
-      }];
+      replyMessage = [
+        {
+          type: "text",
+          text: "進行中の対戦情報の取得に失敗しました。",
+        },
+      ];
     }
   } else if (events.message.text === "全体試合結果") {
     try {
-      const courts = await fetchCourtsWithPlayers();
+      const groups = await fetchGroups();
 
-      courts.sort((a, b) => a.court_number - b.court_number);
+      // グループ1のチーム
+      const group1Teams = groups
+        .filter((group) => group.qualifying === 1)
+        .map((group) => group.groupName)
+        .join(", ");
 
-      const courtResults = courts.map(court => {
-        const nowOrder = court.now_order_id;
-        const waitingOrder = court.waiting_id;
+      // グループ2のチーム
+      const group2Teams = groups
+        .filter((group) => group.qualifying === 2)
+        .map((group) => group.groupName)
+        .join(", ");
 
-        const nowMatch = nowOrder ? `
-          現在の試合:
-          ${nowOrder.group1_first?.name || "不明"} & ${nowOrder.group1_second?.name || "不明"} vs 
-          ${nowOrder.group2_first?.name || "不明"} & ${nowOrder.group2_second?.name || "不明"}
-        ` : "現在の試合: なし";
+      // 決勝に進んだチーム
+      const finalStageTeams = groups
+        .filter((group) => group.final_stage === true)
+        .map((group) => group.groupName)
+        .join(", ");
 
-        const waitingMatch = waitingOrder ? `
-          待機試合:
-          ${waitingOrder.group1_first?.name || "不明"} & ${waitingOrder.group1_second?.name || "不明"} vs 
-          ${waitingOrder.group2_first?.name || "不明"} & ${waitingOrder.group2_second?.name || "不明"}
-        ` : "待機試合: なし";
-
-        return `
-        コート ${court.court_number}:
-        ${nowMatch}
-        ${waitingMatch}
-        `;
-      }).join("\n");
-
-      replyMessage = [{
-        type: "text",
-        text: `全体試合結果:\n${courtResults}`,
-      }];
-
+      replyMessage = [
+        {
+          type: "text",
+          text: `全体試合結果:\n\nグループ1のチーム: ${group1Teams}\nグループ2のチーム: ${group2Teams}\n決勝に進んだチーム: ${finalStageTeams}`,
+        },
+      ];
     } catch (error) {
-      replyMessage = [{
-        type: "text",
-        text: "試合結果の取得に失敗しました。",
-      }];
+      replyMessage = [
+        {
+          type: "text",
+          text: "試合結果の取得に失敗しました。",
+        },
+      ];
     }
   } else {
-    replyMessage = [{
-      type: "text",
-      text: "無効なメッセージです。",
-    }];
+    replyMessage = [
+      {
+        type: "text",
+        text: "無効なメッセージです。",
+      },
+    ];
   }
 
   if (!replyMessage) {
-    replyMessage = [{
-      type: "text",
-      text: "無効なメッセージです。",
-    }];
+    replyMessage = [
+      {
+        type: "text",
+        text: "無効なメッセージです。",
+      },
+    ];
   }
 
   const dataString = JSON.stringify({
