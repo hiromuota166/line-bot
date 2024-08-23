@@ -34,7 +34,7 @@ export const fetchOrderStatus = async (): Promise<Database['public']['Tables']['
   return data;
 };
 
-export const fetchCourts = async (): Promise<any[]> => {
+export const fetchCourtsWithPlayers = async (): Promise<any[]> => {
   const { data, error } = await supabase
     .from('courts')
     .select(`

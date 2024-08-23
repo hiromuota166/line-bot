@@ -1,101 +1,40 @@
 import https from 'https';
-import { fetchCourts, fetchGroups, fetchOrderStatus } from '../services/supabaseService';
+import { fetchCourtsWithPlayers, fetchGroups, fetchOrderStatus } from '../services/supabaseService';
 import { courtCarouselTemplate } from '../templates/lineTemplates';
 
 export const handleLineMessage = async (events: any) => {
   let replyMessage;
 
-  const courtsData = [
-    {
-      courtName: "コート1",
-      teamA: ["西田英明", "山口想太"],
-      teamB: ["竹内悠", "池田光徽"],
-      waitingA: ["乾勇翔", "渡邉泰成"],
-      waitingB: ["朝川凌", "並木宙良"]
-    },
-    {
-      courtName: "コート2",
-      teamA: ["浅田匠一郎", "安達隆太郎"],
-      teamB: ["伊藤新太", "岩瀬拓馬"],
-      waitingA: ["田中暖人", "林洸希"],
-      waitingB: ["広田侑平", "帆苅翔平"]
-    },
-    {
-      courtName: "コート1",
-      teamA: ["西田英明", "山口想太"],
-      teamB: ["竹内悠", "池田光徽"],
-      waitingA: ["乾勇翔", "渡邉泰成"],
-      waitingB: ["朝川凌", "並木宙良"]
-    },
-    {
-      courtName: "コート2",
-      teamA: ["浅田匠一郎", "安達隆太郎"],
-      teamB: ["伊藤新太", "岩瀬拓馬"],
-      waitingA: ["田中暖人", "林洸希"],
-      waitingB: ["広田侑平", "帆苅翔平"]
-    },
-    {
-      courtName: "コート1",
-      teamA: ["西田英明", "山口想太"],
-      teamB: ["竹内悠", "池田光徽"],
-      waitingA: ["乾勇翔", "渡邉泰成"],
-      waitingB: ["朝川凌", "並木宙良"]
-    },
-    {
-      courtName: "コート2",
-      teamA: ["浅田匠一郎", "安達隆太郎"],
-      teamB: ["伊藤新太", "岩瀬拓馬"],
-      waitingA: ["田中暖人", "林洸希"],
-      waitingB: ["広田侑平", "帆苅翔平"]
-    },
-    {
-      courtName: "コート1",
-      teamA: ["西田英明", "山口想太"],
-      teamB: ["竹内悠", "池田光徽"],
-      waitingA: ["乾勇翔", "渡邉泰成"],
-      waitingB: ["朝川凌", "並木宙良"]
-    },
-    {
-      courtName: "コート2",
-      teamA: ["浅田匠一郎", "安達隆太郎"],
-      teamB: ["伊藤新太", "岩瀬拓馬"],
-      waitingA: ["田中暖人", "林洸希"],
-      waitingB: ["広田侑平", "帆苅翔平"]
-    },
-    {
-      courtName: "コート1",
-      teamA: ["西田英明", "山口想太"],
-      teamB: ["竹内悠", "池田光徽"],
-      waitingA: ["乾勇翔", "渡邉泰成"],
-      waitingB: ["朝川凌", "並木宙良"]
-    },
-    {
-      courtName: "コート2",
-      teamA: ["浅田匠一郎", "安達隆太郎"],
-      teamB: ["伊藤新太", "岩瀬拓馬"],
-      waitingA: ["田中暖人", "林洸希"],
-      waitingB: ["広田侑平", "帆苅翔平"]
-    },
-    {
-      courtName: "コート1",
-      teamA: ["西田英明", "山口想太"],
-      teamB: ["竹内悠", "池田光徽"],
-      waitingA: ["乾勇翔", "渡邉泰成"],
-      waitingB: ["朝川凌", "並木宙良"]
-    },
-    {
-      courtName: "コート12",
-      teamA: ["浅田匠一郎", "安達隆太郎"],
-      teamB: ["伊藤新太", "岩瀬拓馬"],
-      waitingA: ["田中暖人", "林洸希"],
-      waitingB: ["広田侑平", "帆苅翔平"]
-    },
-  ];
+  // 動的にcourtsDataを生成
+  const fetchAndProcessCourtData = async () => {
+    const courts = await fetchCourtsWithPlayers(); // fetchCourtsWithPlayersは事前に型付きで作成済み
 
-  const carouselMessage = courtCarouselTemplate(courtsData);
+    return courts.map(court => ({
+      courtName: `コート${court.court_number}`,
+      teamA: [
+        court.now_order_id?.group1_first?.name || "不明な選手",
+        court.now_order_id?.group1_second?.name || "不明な選手"
+      ],
+      teamB: [
+        court.now_order_id?.group2_first?.name || "不明な選手",
+        court.now_order_id?.group2_second?.name || "不明な選手"
+      ],
+      waitingA: [
+        court.waiting_id?.group1_first?.name || "不明な選手",
+        court.waiting_id?.group1_second?.name || "不明な選手"
+      ],
+      waitingB: [
+        court.waiting_id?.group2_first?.name || "不明な選手",
+        court.waiting_id?.group2_second?.name || "不明な選手"
+      ]
+    }));
+  };
 
   if (events.message.type === "sticker") {
     try {
+      const courtsData = await fetchAndProcessCourtData();
+      const carouselMessage = courtCarouselTemplate(courtsData);
+
       replyMessage = [{
         type: "flex",
         altText: "コート情報一覧",
@@ -109,24 +48,24 @@ export const handleLineMessage = async (events: any) => {
     }
   } else if (events.message.text === "進行中の試合") {
     try {
-      const orders = await fetchOrderStatus();  
-    
+      const orders = await fetchOrderStatus();
+
       const matches = orders.map((order: any) => {
         if (order.is_doubles) {
           const group1FirstName = order.group1_first?.name || "不明な選手";
           const group1SecondName = order.group1_second?.name || "不明な選手";
           const group2FirstName = order.group2_first?.name || "不明な選手";
           const group2SecondName = order.group2_second?.name || "不明な選手";
-    
+
           return `${group1FirstName} & ${group1SecondName} vs ${group2FirstName} & ${group2SecondName}`;
         } else {
           const group1Name = order.group1_first?.name || "不明な選手";
           const group2Name = order.group2_first?.name || "不明な選手";
-    
+
           return `${group1Name} vs ${group2Name}`;
         }
       });
-    
+
       replyMessage = [{
         type: "text",
         text: `進行中の対戦はこちら:\n${matches.join("\n")}`,
@@ -139,6 +78,9 @@ export const handleLineMessage = async (events: any) => {
     }    
   } else if (events.message.text === "待機選手と待ちコート") {
     try {
+      const courtsData = await fetchAndProcessCourtData();
+      const carouselMessage = courtCarouselTemplate(courtsData);
+
       replyMessage = [{
         type: "flex",
         altText: "コート情報一覧",
@@ -152,9 +94,8 @@ export const handleLineMessage = async (events: any) => {
     }
   } else if (events.message.text === "全体試合結果") {
     try {
-      const courts = await fetchCourts();
+      const courts = await fetchCourtsWithPlayers();
 
-      // コート番号順に並べ替え
       courts.sort((a, b) => a.court_number - b.court_number);
 
       const courtResults = courts.map(court => {
