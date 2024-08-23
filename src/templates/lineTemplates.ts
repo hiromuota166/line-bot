@@ -236,7 +236,7 @@ export const allProgressCarouselTemplate = (
               size: "sm",
               color: "#555555",
               weight: "bold",
-              flex: 3,
+              flex: 2,
             },
             {
               type: "text",
@@ -276,7 +276,7 @@ export const allProgressCarouselTemplate = (
                   color: "#555555",
                 },
               ],
-              flex: 3,
+              flex: 2,
             },
             {
               type: "text",
