@@ -34,14 +34,32 @@ export const fetchOrderStatus = async (): Promise<Database['public']['Tables']['
   return data;
 };
 
-export const fetchCourts = async (): Promise<Database['public']['Tables']['courts']['Row'][]> => {
+export const fetchCourts = async (): Promise<any[]> => {
   const { data, error } = await supabase
     .from('courts')
-    .select('*')
-    .order('court_number', {ascending: true})
+    .select(`
+      court_number,
+      id,
+      now_order_id (
+        id,
+        group1_first (name),
+        group1_second (name),
+        group2_first (name),
+        group2_second (name)
+      ),
+      waiting_id (
+        id,
+        group1_first (name),
+        group1_second (name),
+        group2_first (name),
+        group2_second (name)
+      )
+    `)
+    .order('court_number', { ascending: true });
+
   if (error) {
     throw new Error(error.message);
   }
 
   return data;
-}
+};

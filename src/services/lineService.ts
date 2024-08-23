@@ -152,20 +152,37 @@ export const handleLineMessage = async (events: any) => {
     }
   } else if (events.message.text === "全体試合結果") {
     try {
-      const courts = await fetchCourts();  // Supabaseからコートのデータを取得
+      const courts = await fetchCourts();
+
+      // コート番号順に並べ替え
+      courts.sort((a, b) => a.court_number - b.court_number);
 
       const courtResults = courts.map(court => {
-        // 各コートの試合結果をまとめる
+        const nowOrder = court.now_order_id;
+        const waitingOrder = court.waiting_id;
+
+        const nowMatch = nowOrder ? `
+          現在の試合:
+          ${nowOrder.group1_first?.name || "不明"} & ${nowOrder.group1_second?.name || "不明"} vs 
+          ${nowOrder.group2_first?.name || "不明"} & ${nowOrder.group2_second?.name || "不明"}
+        ` : "現在の試合: なし";
+
+        const waitingMatch = waitingOrder ? `
+          待機試合:
+          ${waitingOrder.group1_first?.name || "不明"} & ${waitingOrder.group1_second?.name || "不明"} vs 
+          ${waitingOrder.group2_first?.name || "不明"} & ${waitingOrder.group2_second?.name || "不明"}
+        ` : "待機試合: なし";
+
         return `
         コート ${court.court_number}:
-        現在の試合: ${court.now_order_id || "なし"}
-        待機試合: ${court.waiting_id || "なし"}
+        ${nowMatch}
+        ${waitingMatch}
         `;
-      }).join("\n");  // 各コートの結果を結合
+      }).join("\n");
 
       replyMessage = [{
         type: "text",
-        text: `全体試合結果:\n${courtResults}`,  // 各コートの試合結果を返信メッセージとして設定
+        text: `全体試合結果:\n${courtResults}`,
       }];
 
     } catch (error) {
@@ -174,6 +191,11 @@ export const handleLineMessage = async (events: any) => {
         text: "試合結果の取得に失敗しました。",
       }];
     }
+  } else {
+    replyMessage = [{
+      type: "text",
+      text: "無効なメッセージです。",
+    }];
   }
 
   if (!replyMessage) {
