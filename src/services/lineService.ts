@@ -2,6 +2,7 @@ import https from "https";
 import {
   fetchCourtsWithPlayers,
   fetchGroups,
+  fetchMatches,
   fetchOrderStatus,
 } from "../services/supabaseService";
 import { courtCarouselTemplate } from "../templates/lineTemplates";
@@ -111,29 +112,58 @@ export const handleLineMessage = async (events: any) => {
   } else if (events.message.text === "全体試合結果") {
     try {
       const groups = await fetchGroups();
+      const matches = await fetchMatches();
 
-      // グループ1のチーム
-      const group1Teams = groups
+      // グループごとの勝敗カウントを初期化
+      const groupResults: { [key: string]: { win: number; lose: number } } = {};
+
+      groups.forEach((group) => {
+        groupResults[group.id] = { win: 0, lose: 0 };
+      });
+
+      // 各試合結果に基づいて勝敗をカウント
+      matches.forEach((match) => {
+        if (match.winner_id) {
+          // 勝利したグループ
+          groupResults[match.winner_id].win += 1;
+
+          // 負けたグループ
+          const loserId =
+            match.group1_id === match.winner_id
+              ? match.group2_id
+              : match.group1_id;
+          if (loserId) {
+            groupResults[loserId].lose += 1;
+          }
+        }
+      });
+
+      // グループ1のチームとその勝敗
+      const group1Results = groups
         .filter((group) => group.qualifying === 1)
-        .map((group) => group.groupName)
-        .join(", ");
+        .map(
+          (group) =>
+            `${group.groupName}: ${groupResults[group.id].win} 勝 ${
+              groupResults[group.id].lose
+            } 敗`
+        )
+        .join("\n");
 
-      // グループ2のチーム
-      const group2Teams = groups
+      // グループ2のチームとその勝敗
+      const group2Results = groups
         .filter((group) => group.qualifying === 2)
-        .map((group) => group.groupName)
-        .join(", ");
-
-      // 決勝に進んだチーム
-      const finalStageTeams = groups
-        .filter((group) => group.final_stage === true)
-        .map((group) => group.groupName)
-        .join(", ");
+        .map(
+          (group) =>
+            `${group.groupName}: ${groupResults[group.id].win} 勝 ${
+              groupResults[group.id].lose
+            } 敗`
+        )
+        .join("\n");
 
       replyMessage = [
         {
           type: "text",
-          text: `全体試合結果:\n\nグループ1のチーム: ${group1Teams}\nグループ2のチーム: ${group2Teams}\n決勝に進んだチーム: ${finalStageTeams}`,
+          text: `全体試合結果:\n\nグループ1のチーム:\n${group1Results}\n\nグループ2のチーム:\n${group2Results}`,
         },
       ];
     } catch (error) {

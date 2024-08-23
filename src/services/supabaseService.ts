@@ -34,6 +34,18 @@ export const fetchOrderStatus = async (): Promise<Database['public']['Tables']['
   return data;
 };
 
+export const fetchMatches = async (): Promise<Database['public']['Tables']['matches']['Row'][]> => {
+  const { data, error } = await supabase
+    .from('matches')
+    .select('*');
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 export const fetchCourtsWithPlayers = async (): Promise<any[]> => {
   const { data, error } = await supabase
     .from('courts')
