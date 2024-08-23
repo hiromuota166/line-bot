@@ -196,6 +196,21 @@ export const courtCarouselTemplate = (courts: { courtName: string, teamA: string
             }
           ]
         }
+      ],
+      spacing: "md"
+    },
+    footer: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "button",
+          action: {
+            type: "message",
+            label: "全体試合結果を見る",
+            text: "全体試合結果"
+          }
+        }
       ]
     }
   }));
