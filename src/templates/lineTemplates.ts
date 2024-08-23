@@ -1,7 +1,7 @@
 export const courtCarouselTemplate = (courts: { courtName: string, teamA: string[], teamB: string[], waitingA: string[], waitingB: string[] }[]) => {
   const bubbles = courts.map(court => ({
     type: "bubble",
-    body: {
+    header: {
       type: "box",
       layout: "vertical",
       contents: [
@@ -9,8 +9,15 @@ export const courtCarouselTemplate = (courts: { courtName: string, teamA: string
           type: "text",
           text: court.courtName,
           size: "xl",
+          color: "#111111",
           weight: "bold"
-        },
+        }
+      ]
+    },
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
         {
           type: "box",
           layout: "horizontal",
