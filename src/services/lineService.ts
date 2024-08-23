@@ -1,5 +1,5 @@
 import https from 'https';
-import { fetchGroups, fetchOrderStatus } from '../services/supabaseService';
+import { fetchCourts, fetchGroups, fetchOrderStatus } from '../services/supabaseService';
 import { courtCarouselTemplate } from '../templates/lineTemplates';
 
 export const handleLineMessage = async (events: any) => {
@@ -148,6 +148,30 @@ export const handleLineMessage = async (events: any) => {
       replyMessage = [{
         type: "text",
         text: "進行中の対戦情報の取得に失敗しました。",
+      }];
+    }
+  } else if (events.message.text === "全体試合結果") {
+    try {
+      const courts = await fetchCourts();  // Supabaseからコートのデータを取得
+
+      const courtResults = courts.map(court => {
+        // 各コートの試合結果をまとめる
+        return `
+        コート ${court.court_number}:
+        現在の試合: ${court.now_order_id || "なし"}
+        待機試合: ${court.waiting_id || "なし"}
+        `;
+      }).join("\n");  // 各コートの結果を結合
+
+      replyMessage = [{
+        type: "text",
+        text: `全体試合結果:\n${courtResults}`,  // 各コートの試合結果を返信メッセージとして設定
+      }];
+
+    } catch (error) {
+      replyMessage = [{
+        type: "text",
+        text: "試合結果の取得に失敗しました。",
       }];
     }
   }

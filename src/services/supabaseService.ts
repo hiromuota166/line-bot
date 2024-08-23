@@ -1,12 +1,15 @@
-import { createClient } from '@supabase/supabase-js'
-import 'dotenv/config'
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import 'dotenv/config';
+import { Database } from '../types/database.types'; // パスを適切に調整
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+// Supabaseクライアントの型を指定
+export const supabase: SupabaseClient<Database> = createClient(supabaseUrl!, supabaseAnonKey!);
 
-export const fetchGroups = async () => {
+// 型定義に基づいてfetchGroups関数に型を付ける
+export const fetchGroups = async (): Promise<Database['public']['Tables']['groups']['Row'][]> => {
   const { data, error } = await supabase
     .from('groups')
     .select('*');
@@ -18,24 +21,10 @@ export const fetchGroups = async () => {
   return data;
 };
 
-export const fetchOrderStatus = async () => {
+export const fetchOrderStatus = async (): Promise<Database['public']['Tables']['orders']['Row'][]> => {
   const { data, error } = await supabase
     .from('orders')
-    .select(`
-      id,
-      match_id,
-      order_num,
-      is_doubles,
-      group1_score,
-      group2_score,
-      tie_break,
-      winner_team,
-      order_status,
-      group1_first:players!group1_first (name),
-      group1_second:players!group1_second (name),
-      group2_first:players!group2_first (name),
-      group2_second:players!group2_second (name)
-    `)
+    .select('*')
     .eq('order_status', '進行中');
 
   if (error) {
@@ -44,3 +33,14 @@ export const fetchOrderStatus = async () => {
 
   return data;
 };
+
+export const fetchCourts = async (): Promise<Database['public']['Tables']['courts']['Row'][]> => {
+  const { data, error } = await supabase
+    .from('courts')
+    .select('*')
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
