@@ -38,6 +38,7 @@ export const fetchCourts = async (): Promise<Database['public']['Tables']['court
   const { data, error } = await supabase
     .from('courts')
     .select('*')
+    .order('court_number', {ascending: true})
   if (error) {
     throw new Error(error.message);
   }
