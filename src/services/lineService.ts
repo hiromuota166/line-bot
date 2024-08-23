@@ -5,7 +5,7 @@ import {
   fetchMatches,
   fetchOrderStatus,
 } from "../services/supabaseService";
-import { courtCarouselTemplate } from "../templates/lineTemplates";
+import { allProgressCarouselTemplate, courtCarouselTemplate } from "../templates/lineTemplates";
 
 export const handleLineMessage = async (events: any) => {
   let replyMessage;
@@ -128,42 +128,50 @@ export const handleLineMessage = async (events: any) => {
           groupResults[match.winner_id].win += 1;
 
           // 負けたグループ
-          const loserId =
-            match.group1_id === match.winner_id
-              ? match.group2_id
-              : match.group1_id;
+          const loserId = match.group1_id === match.winner_id
+            ? match.group2_id
+            : match.group1_id;
           if (loserId) {
             groupResults[loserId].lose += 1;
           }
         }
       });
 
-      // グループ1のチームとその勝敗
-      const group1Results = groups
-        .filter((group) => group.qualifying === 1)
-        .map(
-          (group) =>
-            `${group.groupName}: ${groupResults[group.id].win} 勝 ${
-              groupResults[group.id].lose
-            } 敗`
-        )
-        .join("\n");
+      // グループ1とグループ2の試合結果を準備
+      const group1Data = {
+        qualifying: "グループ1",
+        groupName: groups
+          .filter((group) => group.qualifying === 1)
+          .map((group) => group.groupName),
+        resultWin: groups
+          .filter((group) => group.qualifying === 1)
+          .map((group) => groupResults[group.id].win.toString()),
+        resultLose: groups
+          .filter((group) => group.qualifying === 1)
+          .map((group) => groupResults[group.id].lose.toString()),
+      };
 
-      // グループ2のチームとその勝敗
-      const group2Results = groups
-        .filter((group) => group.qualifying === 2)
-        .map(
-          (group) =>
-            `${group.groupName}: ${groupResults[group.id].win} 勝 ${
-              groupResults[group.id].lose
-            } 敗`
-        )
-        .join("\n");
+      const group2Data = {
+        qualifying: "グループ2",
+        groupName: groups
+          .filter((group) => group.qualifying === 2)
+          .map((group) => group.groupName),
+        resultWin: groups
+          .filter((group) => group.qualifying === 2)
+          .map((group) => groupResults[group.id].win.toString()),
+        resultLose: groups
+          .filter((group) => group.qualifying === 2)
+          .map((group) => groupResults[group.id].lose.toString()),
+      };
+
+      // カルーセルメッセージを作成
+      const carouselMessage = allProgressCarouselTemplate([group1Data, group2Data]);
 
       replyMessage = [
         {
-          type: "text",
-          text: `全体試合結果:\n\nグループ1のチーム:\n${group1Results}\n\nグループ2のチーム:\n${group2Results}`,
+          type: "flex",
+          altText: "全体試合結果",
+          contents: carouselMessage,
         },
       ];
     } catch (error) {

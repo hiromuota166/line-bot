@@ -199,8 +199,15 @@ export const courtCarouselTemplate = (courts: { courtName: string, teamA: string
   };
 };
 
-export const allProgressCarouselTemplate = (progresses: { qualifying: string, groupName: string[], resultWin: string[], resultLose: string[] }[]) => {
-  const bubbles = progresses.map(progress => ({
+export const allProgressCarouselTemplate = (
+  progresses: {
+    qualifying: string;
+    groupName: string[];
+    resultWin: string[];
+    resultLose: string[];
+  }[]
+) => {
+  const bubbles = progresses.map((progress) => ({
     type: "bubble",
     header: {
       type: "box",
@@ -211,198 +218,52 @@ export const allProgressCarouselTemplate = (progresses: { qualifying: string, gr
           text: progress.qualifying,
           weight: "bold",
           size: "xl",
-          margin: "md"
-        }
-      ]
+          margin: "md",
+        },
+      ],
     },
     body: {
       type: "box",
       layout: "vertical",
-      contents: [
-        {
-          type: "box",
-          layout: "vertical",
-          margin: "md",
-          spacing: "sm",
-          contents: [
-            {
-              type: "box",
-              layout: "horizontal",
-              contents: [
-                {
-                  type: "text",
-                  text: "Team",
-                  size: "sm",
-                  color: "#555555",
-                  weight: "bold",
-                  flex: 3
-                },
-                {
-                  type: "text",
-                  text: "WIN",
-                  size: "sm",
-                  color: "#ff4500",
-                  align: "end",
-                  weight: "bold"
-                },
-                {
-                  type: "text",
-                  text: "LOSE",
-                  size: "sm",
-                  color: "#111111",
-                  align: "end",
-                  weight: "bold"
-                }
-              ]
-            },
-            {
-              type: "separator",
-              margin: "md"
-            },
-            {
-              type: "box",
-              layout: "horizontal",
-              margin: "md",
-              contents: [
-                {
-                  type: "box",
-                  layout: "baseline",
-                  contents: [
-                    {
-                      type: "text",
-                      text: progress.groupName[0] || "N/A",
-                      size: "sm",
-                      color: "#555555"
-                    }
-                  ],
-                  flex: 3
-                },
-                {
-                  type: "text",
-                  text: progress.resultWin[0] || "N/A",
-                  size: "sm",
-                  color: "#ff4500",
-                  align: "end"
-                },
-                {
-                  type: "text",
-                  text: progress.resultLose[0] || "N/A",
-                  size: "sm",
-                  color: "#111111",
-                  align: "end"
-                }
-              ]
-            },
-            {
-              type: "box",
-              layout: "horizontal",
-              margin: "md",
-              contents: [
-                {
-                  type: "box",
-                  layout: "baseline",
-                  contents: [
-                    {
-                      type: "text",
-                      text: progress.groupName[1] || "N/A",
-                      size: "sm",
-                      color: "#555555"
-                    }
-                  ],
-                  flex: 3
-                },
-                {
-                  type: "text",
-                  text: progress.resultWin[1] || "N/A",
-                  size: "sm",
-                  color: "#ff4500",
-                  align: "end"
-                },
-                {
-                  type: "text",
-                  text: progress.resultLose[1] || "N/A",
-                  size: "sm",
-                  color: "#111111",
-                  align: "end"
-                }
-              ]
-            },
-            {
-              type: "box",
-              layout: "horizontal",
-              margin: "md",
-              contents: [
-                {
-                  type: "box",
-                  layout: "baseline",
-                  contents: [
-                    {
-                      type: "text",
-                      text: progress.groupName[2] || "N/A",
-                      size: "sm",
-                      color: "#555555"
-                    }
-                  ],
-                  flex: 3
-                },
-                {
-                  type: "text",
-                  text: progress.resultWin[2] || "N/A",
-                  size: "sm",
-                  color: "#ff4500",
-                  align: "end"
-                },
-                {
-                  type: "text",
-                  text: progress.resultLose[2] || "N/A",
-                  size: "sm",
-                  color: "#111111",
-                  align: "end"
-                }
-              ]
-            },
-            {
-              type: "box",
-              layout: "horizontal",
-              margin: "md",
-              contents: [
-                {
-                  type: "box",
-                  layout: "baseline",
-                  contents: [
-                    {
-                      type: "text",
-                      text: progress.groupName[3] || "N/A",
-                      size: "sm",
-                      color: "#555555"
-                    }
-                  ],
-                  flex: 3
-                },
-                {
-                  type: "text",
-                  text: progress.resultWin[3] || "N/A",
-                  size: "sm",
-                  color: "#ff4500",
-                  align: "end"
-                },
-                {
-                  type: "text",
-                  text: progress.resultLose[3] || "N/A",
-                  size: "sm",
-                  color: "#111111",
-                  align: "end"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
+      contents: progress.groupName.map((groupName, index) => ({
+        type: "box",
+        layout: "horizontal",
+        margin: "md",
+        contents: [
+          {
+            type: "box",
+            layout: "baseline",
+            contents: [
+              {
+                type: "text",
+                text: groupName || "N/A",
+                size: "sm",
+                color: "#555555",
+              },
+            ],
+            flex: 3,
+          },
+          {
+            type: "text",
+            text: progress.resultWin[index] || "0",
+            size: "sm",
+            color: "#ff4500",
+            align: "end",
+          },
+          {
+            type: "text",
+            text: progress.resultLose[index] || "0",
+            size: "sm",
+            color: "#111111",
+            align: "end",
+          },
+        ],
+      })),
+    },
   }));
 
   return {
     type: "carousel",
-    contents: bubbles
+    contents: bubbles,
   };
 };
